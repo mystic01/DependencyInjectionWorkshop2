@@ -54,6 +54,13 @@ namespace DependencyInjectionWorkshopTests
             ShouldBeInvalid(valid);
         }
 
+        [Test]
+        public void reset_failed_count_when_valid()
+        {
+            WhenValid();
+            _failedCounter.Received(1).ResetFailedCount(DefaultAccountId);
+        }
+
         private static void ShouldBeInvalid(bool valid)
         {
             Assert.IsFalse(valid);
@@ -74,6 +81,8 @@ namespace DependencyInjectionWorkshopTests
             _profile.GetPassword(DefaultAccountId).Returns(DefaultPasswordFromDb);
             _hash.Compute(DefaultPassword).Returns(DefaultPasswordFromDb);
             _otpService.GetCurrentOtp(DefaultAccountId).Returns(DefaultOtp);
+
+            IsValid(DefaultAccountId, DefaultPassword, DefaultOtp);
         }
     }
 }
