@@ -3,7 +3,15 @@ using System.Net.Http;
 
 namespace DependencyInjectionWorkshop.Models
 {
-    public class FailedCounter
+    public interface IFailedCounter
+    {
+        void ResetFailedCount(string accountId);
+        void AddFailedCount(string accountId);
+        int GetFailedCount(string accountId);
+        bool GetAccountIsLocked(string accountId);
+    }
+
+    public class FailedCounter : IFailedCounter
     {
         public void ResetFailedCount(string accountId)
         {
@@ -26,14 +34,11 @@ namespace DependencyInjectionWorkshop.Models
             return failedCount;
         }
 
-        public void IsLocked(string accountId)
+        public bool GetAccountIsLocked(string accountId)
         {
             var isLockedResponse = new HttpClient() { BaseAddress = new Uri("http://joey.com/") }.PostAsJsonAsync("api/failedCounter/IsLocked", accountId).Result;
             isLockedResponse.EnsureSuccessStatusCode();
-            if (isLockedResponse.Content.ReadAsAsync<bool>().Result)
-            {
-                throw new FailedTooManyTimesException();
-            }
+            return isLockedResponse.Content.ReadAsAsync<bool>().Result;
         }
     }
 }

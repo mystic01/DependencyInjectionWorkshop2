@@ -1,6 +1,11 @@
 ﻿namespace DependencyInjectionWorkshop.Models
 {
-    public class NLogger
+    public interface ILogger
+    {
+        void LogMessage(string message);
+    }
+
+    public class Logger : ILogger
     {
         public void LogMessage(string message)
         {
